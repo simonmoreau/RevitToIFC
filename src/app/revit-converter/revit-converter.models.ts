@@ -65,3 +65,37 @@ export interface ConversionJob {
 }
 
 
+export interface Message {
+    type: string;
+    code: string;
+    message: string[];
+}
+
+export interface Child {
+    guid: string;
+    type: string;
+    role: string;
+    urn: string;
+    mime: string;
+    status: string;
+}
+
+export interface Derivative {
+    status: string;
+    progress: string;
+    outputType: string;
+    children: Child[];
+}
+
+export interface JobStatus {
+    type: string;
+    messages: Message[];
+    hasThumbnail: string;
+    status: string;
+    progress: string;
+    region: string;
+    urn: string;
+    version: string;
+    derivatives: Derivative[];
+}
+

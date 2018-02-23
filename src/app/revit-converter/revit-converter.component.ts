@@ -13,13 +13,11 @@ const baseUrl = 'https://developer.api.autodesk.com/oss/v2/buckets/';
 })
 export class RevitConverterComponent implements OnInit {
 
-  public uploader: FileUploader = new FileUploader({ isHTML5: true });
+  public uploader: FileUploader = new FileUploader({disableMultipart: true});
   public uploaderOptions: FileUploaderOptions;
-  public conversionJobs: ConversionJob[] = [];
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;
-  public access_token = "eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJlajhvbHFheEV0UHF1a2VhRlhYTXZBNjVqN2Zla1pBRyIsImV4cCI6MTUxOTQyNDE3Miwic2NvcGUiOlsiZGF0YTp3cml0ZSIsInZpZXdhYmxlczpyZWFkIiwiYnVja2V0OnJlYWQiLCJkYXRhOnJlYWQiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoibVRRUnZ3c2NUVVU1R3REUHJIS0tXVUJmR1JGOXQwMjE5OFFYN0VXOTJWa3FsZWdBWGNtVFJEaFJyTGR4WjQ0VSJ9.owdQYZAf0ntGjwzTQNz23wGt2Crb4rE6k41d_u2Rlzk";
-
+  public access_token = "eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJlajhvbHFheEV0UHF1a2VhRlhYTXZBNjVqN2Zla1pBRyIsImV4cCI6MTUxOTQyNzgyOSwic2NvcGUiOlsiZGF0YTp3cml0ZSIsInZpZXdhYmxlczpyZWFkIiwiYnVja2V0OnJlYWQiLCJkYXRhOnJlYWQiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoidW5veW9jV2lPdXJHVUR5aVRYQ1gwbXJneFZrMlNXM3Bpb3NEUkU3SXNHUHl0OVVRcE5KR0p4SW5BMDFOb3VFOSJ9.MfH_Q_hz8UoS5Wdp-fiEUf0i28BvZXLmJSynssM5njo";
 
   constructor(private _revitConverterService: RevitConverterService) { }
 
@@ -32,37 +30,37 @@ export class RevitConverterComponent implements OnInit {
 
       let headers: Headers[] = [
         { name: "Authorization", value: "Bearer " + this.access_token },
-        { name: "Content-Type", value: "application/octet-stream" },
-        { name: "Content-Length", value: item.file.size }
+        { name: "Content-Type", value: "application/octet-stream" }
       ];
 
       item.headers = headers;
     }
 
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
-      console.log("ImageUpload:uploaded:", item, status, headers);
-      console.log("");
       console.log(response);
-      let uploadResponse: UploadAnswer;
-      uploadResponse = JSON.parse(response);
-      this.conversionJobs.filter(job => job.file.file === item.file)[0].uploadAnswer = uploadResponse;
+      let uploadResponse: UploadAnswer = JSON.parse(response);
 
-      this._revitConverterService.PostJob(this.access_token, uploadResponse.objectId);
+      item.formData = "Uploaded";
+
+      this._revitConverterService.PostJobRequest(this.access_token, uploadResponse.objectId)
+        .subscribe(answer => {
+          this._revitConverterService.GetJobStatus(this.access_token, uploadResponse.objectId)
+          .subscribe(jobStatus => {
+            this._revitConverterService.GetJobStatus(this.access_token, uploadResponse.objectId)
+            .subscribe(jobCurrentStatus => {
+              do {
+                this._revitConverterService.setDelay();
+                item.formData = jobCurrentStatus.progress;
+             } while (jobCurrentStatus.progress !== "complete")
+            },
+            error => this._revitConverterService.errorMessage = <any>error);
+          },
+          error => this._revitConverterService.errorMessage = <any>error);
+        },
+        error => this._revitConverterService.errorMessage = <any>error);
     };
-
-    this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
-      let conversionJob: ConversionJob = { uploadAnswer: null, file: fileItem, jobAnswer: null };
-      this.conversionJobs.push(conversionJob);
-    }
-
-    this.uploader.onCancelItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
-
-      let index: number = this.conversionJobs.indexOf(this.conversionJobs.filter(job => job.file.file === item.file)[0]);
-      if (index > -1) {
-        this.conversionJobs.splice(index, 1);
-      }
-    }
   }
+
 
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;

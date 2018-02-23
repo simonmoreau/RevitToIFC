@@ -6,35 +6,45 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
-import { JobAnswer, JobBody, Format, Type  } from "./revit-converter.models";
+import { JobAnswer, JobBody, Format, Type, JobStatus  } from "./revit-converter.models";
 
 @Injectable()
 export class RevitConverterService {
 
   errorMessage: string;
-  private _baseUrl = 'https://developer.api.autodesk.com/modelderivative/v2/designdata/job';
+  private _baseUrl = 'https://developer.api.autodesk.com/modelderivative/v2/designdata/';
 
   constructor(private _http: HttpClient, private router: Router) {}
 
-  public PostJob(access_token: string, objectId: string) {
-
-    let body: string = '{"input": {"urn": "' + btoa(objectId).replace(/=+$/, "") + '"},"output": {"formats": [{"type": "ifc"}]}}'
-    this.PostJobRequest(access_token, body)
-      .subscribe(answer => {
-        console.log(answer);
-      },
-      error => this.errorMessage = <any>error);
+  public setDelay(): void {
+    setTimeout(function() {
+      // console.log(i);
+    }, 1000);
   }
 
-  private PostJobRequest(access_token: string, body: string): Observable<JobAnswer> {
+  public PostJobRequest(access_token: string, objectId: string): Observable<JobAnswer> {
+
+    let body: string = '{"input": {"urn": "' + btoa(objectId).replace(/=+$/, "") + '"},"output": {"formats": [{"type": "ifc"}]}}'
+
     return this._http.post<JobAnswer>(
-      this._baseUrl , body,
+      this._baseUrl + 'job', body,
       {
         headers: new HttpHeaders()
           .set('Authorization', 'Bearer ' + access_token)
           .set('Content-Type', 'application/json')
       })
       .do(data => console.log('All PostJobRequest: ' + JSON.stringify(data)))
+      .catch(this.handleError);
+  }
+
+   GetJobStatus(access_token: string, objectId: string): Observable<JobStatus> {
+    return this._http.get<JobStatus>(
+      this._baseUrl + btoa(objectId).replace(/=+$/, "") + '/manifest' ,
+      {
+        headers: new HttpHeaders()
+          .set('Authorization', 'Bearer ' + access_token)
+      })
+      .do(data => console.log('All GetJobStatus: ' + JSON.stringify(data)))
       .catch(this.handleError);
   }
 

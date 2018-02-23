@@ -46,11 +46,10 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-9" style="margin-bottom: 40px" *ngIf="uploader.queue.length != 0">
+  <div class="col-md-12" style="margin-bottom: 40px" *ngIf="uploader.queue.length != 0">
 
     <h3>Upload queue</h3>
     <p>Queue length: {{ uploader?.queue?.length }}</p>
-    <p>conversionJobs length: {{ conversionJobs?.length }}</p>
 
     <table class="table">
       <thead>
@@ -75,23 +74,10 @@
               <progress max="100" value="{{item.progress}}"></progress>
             </div>
           </td>
-          <td class="text-center">
-            <span *ngIf="item.isSuccess">
-              <i class="glyphicon glyphicon-ok"></i>
-            </span>
-            <span *ngIf="item.isCancel">
-              <i class="glyphicon glyphicon-ban-circle"></i>
-            </span>
-            <span *ngIf="item.isError">
-              <i class="glyphicon glyphicon-remove"></i>
-            </span>
-          </td>
+          <td nowrap>{{item?.formData}}</td>
           <td nowrap>
             <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
               <span class="glyphicon glyphicon-upload"></span> Upload
-            </button>
-            <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()" [disabled]="!item.isUploading">
-              <span class="glyphicon glyphicon-ban-circle"></span> Cancel
             </button>
             <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
               <span class="glyphicon glyphicon-trash"></span> Remove
@@ -110,9 +96,6 @@
       </div>
       <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
         <span class="glyphicon glyphicon-upload"></span> Upload all
-      </button>
-      <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-        <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
       </button>
       <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
         <span class="glyphicon glyphicon-trash"></span> Remove all
