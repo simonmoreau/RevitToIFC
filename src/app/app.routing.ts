@@ -8,11 +8,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
+import { RevitConverterComponent } from "./revit-converter/revit-converter.component";
 
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
     {path: 'home', component: HomeComponent},
+    {path: 'revitconverter', component: RevitConverterComponent},
     {path: 'about', component: AboutComponent}
 ];
 
