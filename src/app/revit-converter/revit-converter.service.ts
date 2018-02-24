@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
-import { JobAnswer, JobBody, Format, Type, JobStatus  } from "./revit-converter.models";
+import { JobAnswer, JobBody, Format, Type, JobStatus } from "./revit-converter.models";
 
 @Injectable()
 export class RevitConverterService {
@@ -14,10 +14,10 @@ export class RevitConverterService {
   errorMessage: string;
   private _baseUrl = 'https://developer.api.autodesk.com/modelderivative/v2/designdata/';
 
-  constructor(private _http: HttpClient, private router: Router) {}
+  constructor(private _http: HttpClient, private router: Router) { }
 
   public setDelay(delay: number): void {
-    setTimeout(function() {
+    setTimeout(function () {
       console.log(delay);
     }, delay);
   }
@@ -39,7 +39,7 @@ export class RevitConverterService {
 
   public GetJobStatus(access_token: string, urn: string): Observable<JobStatus> {
     return this._http.get<JobStatus>(
-      this._baseUrl + urn + '/manifest' ,
+      this._baseUrl + urn + '/manifest',
       {
         headers: new HttpHeaders()
           .set('Authorization', 'Bearer ' + access_token)
@@ -48,9 +48,17 @@ export class RevitConverterService {
       .catch(this.handleError);
   }
 
+  /**
+   * ConvertConversionProgress
+   */
+  public ConvertConversionProgress(progress: string): number {
+    let value: number = Number(progress.match(/^\d*/)) as number;
+    return value;
+  }
+
   DeleteBucket(access_token: string, bucketId: string): Observable<any> {
     return this._http.delete<any>(
-      'https://developer.api.autodesk.com/oss/v2/buckets/' + bucketId ,
+      'https://developer.api.autodesk.com/oss/v2/buckets/' + bucketId,
       {
         headers: new HttpHeaders()
           .set('Authorization', 'Bearer ' + access_token)

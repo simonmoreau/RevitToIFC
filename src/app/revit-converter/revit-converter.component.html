@@ -5,22 +5,22 @@
 <p>
   Authenticate (Key and secret) Upload (file path) Convert Download
 </p>
-<form>
+<form #authenticationForm="ngForm">
   <section class="form-block">
     <label>Identification</label>
     <div class="form-group">
       <label class="required">Client Id</label>
-      <label for="validInput1" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm">
-        <input type="text" id="validInput1">
+      <label for="validInput1" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm" [class.invalid]="IdInput.invalid && (IdInput.dirty || IdInput.touched)">
+        <input type="text" id="validInput1" [(ngModel)]="client_id" required name="client_id" #IdInput="ngModel">
         <span class="tooltip-content">
           This field cannot be empty!
         </span>
       </label>
     </div>
     <div class="form-group">
-      <label class="required">Secret Key</label>
-      <label for="validInput2" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm">
-        <input type="text" id="validInput2">
+      <label class="required">Client Secret</label>
+      <label for="validInput2" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm" [class.invalid]="secretInput.invalid && (secretInput.dirty || secretInput.touched)">
+        <input type="text" id="validInput2" [(ngModel)]="client_secret" required name="client_secret" #secretInput="ngModel">
         <span class="tooltip-content">
           This field cannot be empty!
         </span>
@@ -28,6 +28,9 @@
     </div>
   </section>
 </form>
+
+<p>Client Id {{client_id}}</p>
+<p>Client Secret {{client_secret}}</p>
 
 <div class="row">
   <div class="col-md-3">
@@ -94,7 +97,7 @@
           <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
         </div>
       </div>
-      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length && authenticationForm.form.invalid">
         <span class="glyphicon glyphicon-upload"></span> Upload all
       </button>
       <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">

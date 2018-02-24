@@ -15,6 +15,8 @@ export class RevitConverterComponent implements OnInit {
 
   public uploader: FileUploader = new FileUploader({ disableMultipart: true });
   public uploaderOptions: FileUploaderOptions;
+  public client_id: string;
+  public client_secret: string;
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;
   public access_token = "eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJlajhvbHFheEV0UHF1a2VhRlhYTXZBNjVqN2Zla1pBRyIsImV4cCI6MTUxOTQ4MzY4Niwic2NvcGUiOlsiZGF0YTp3cml0ZSIsInZpZXdhYmxlczpyZWFkIiwiZGF0YTpyZWFkIiwiYnVja2V0OnJlYWQiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiNU9UbDVFYUZHWTM3ZUE0bVh1VnFrbGFXYzJLanFaazhjeUdTUXU4NmFPOE5HWEQxRkxieTJzRjh3d0RtMXdIMSJ9.4uk6g_1WUNEWgaEeMYog2pJwyPEnmEdBhRfdhA-IQTw";
@@ -34,13 +36,17 @@ export class RevitConverterComponent implements OnInit {
       ];
 
       item.headers = headers;
+
+      let itemStatus: FormDataStatus = {
+        intervalId: null,
+        status: "Uploading"
+      };
+      item.formData = itemStatus;
     }
 
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
       console.log(response);
       let uploadResponse: UploadAnswer = JSON.parse(response);
-
-      item.formData = "Uploaded";
 
       this._revitConverterService.PostJobRequest(this.access_token, uploadResponse.objectId)
         .subscribe(answer => {
@@ -48,7 +54,7 @@ export class RevitConverterComponent implements OnInit {
             .subscribe(jobStatus1 => {
               let itemStatus: FormDataStatus = {
                 intervalId: null,
-                status: jobStatus1.progress
+                status: "Converting"
               };
               item.formData = itemStatus;
 
@@ -69,15 +75,21 @@ export class RevitConverterComponent implements OnInit {
   public UpdateJobStatus(access_token: string, urn: string, service: RevitConverterService, item: FileItem): void {
     service.GetJobStatus(access_token, urn)
       .subscribe(jobCurrentStatus => {
+        let itemStatus: FormDataStatus = item.formData;
+
         if (jobCurrentStatus.progress !== "complete") {
-          item.formData.status = jobCurrentStatus.progress;
+          // While the job is running
+          itemStatus.status = jobCurrentStatus.progress;
         } else {
-          item.formData.status = "complete";
-          clearInterval(item.formData.intervalId);
+          // When the conversion is complete
+          itemStatus.status = "Complete";
+          clearInterval(itemStatus.intervalId);
         }
       },
         error => this._revitConverterService.errorMessage = <any>error)
   }
+
+
 
   /**
    * DeleteBuckets
