@@ -16,10 +16,10 @@ export class RevitConverterService {
 
   constructor(private _http: HttpClient, private router: Router) {}
 
-  public setDelay(): void {
+  public setDelay(delay: number): void {
     setTimeout(function() {
-      // console.log(i);
-    }, 1000);
+      console.log(delay);
+    }, delay);
   }
 
   public PostJobRequest(access_token: string, objectId: string): Observable<JobAnswer> {
@@ -37,14 +37,25 @@ export class RevitConverterService {
       .catch(this.handleError);
   }
 
-   GetJobStatus(access_token: string, objectId: string): Observable<JobStatus> {
+  public GetJobStatus(access_token: string, urn: string): Observable<JobStatus> {
     return this._http.get<JobStatus>(
-      this._baseUrl + btoa(objectId).replace(/=+$/, "") + '/manifest' ,
+      this._baseUrl + urn + '/manifest' ,
       {
         headers: new HttpHeaders()
           .set('Authorization', 'Bearer ' + access_token)
       })
       .do(data => console.log('All GetJobStatus: ' + JSON.stringify(data)))
+      .catch(this.handleError);
+  }
+
+  DeleteBucket(access_token: string, bucketId: string): Observable<any> {
+    return this._http.delete<any>(
+      'https://developer.api.autodesk.com/oss/v2/buckets/' + bucketId ,
+      {
+        headers: new HttpHeaders()
+          .set('Authorization', 'Bearer ' + access_token)
+      })
+      // .do(data => console.log('All DeleteBucket: ' + JSON.stringify(data)))
       .catch(this.handleError);
   }
 

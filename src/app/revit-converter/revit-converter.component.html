@@ -1,7 +1,7 @@
 <p>
   revit-converter works!
 </p>
-
+<button type="button" class="btn btn-success btn-xs" (click)="DeleteBuckets()">Delete Buckets</button>
 <p>
   Authenticate (Key and secret) Upload (file path) Convert Download
 </p>
@@ -74,7 +74,7 @@
               <progress max="100" value="{{item.progress}}"></progress>
             </div>
           </td>
-          <td nowrap>{{item?.formData}}</td>
+          <td nowrap>{{item?.formData?.status}}</td>
           <td nowrap>
             <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
               <span class="glyphicon glyphicon-upload"></span> Upload

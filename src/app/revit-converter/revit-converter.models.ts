@@ -48,6 +48,11 @@ export interface JobAnswer {
     acceptedJobs: AcceptedJobs;
 }
 
+export interface FormDataStatus {
+    intervalId: number;
+    status: string;
+}
+
 export interface UploadAnswer {
     bucketKey: string;
     objectId: string;
