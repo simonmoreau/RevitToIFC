@@ -11,13 +11,15 @@ import { HomeComponent } from "./home/home.component";
 import { AboutComponent } from "./about/about.component";
 import { RevitConverterComponent } from './revit-converter/revit-converter.component';
 import { FileUploadModule } from "ng2-file-upload";
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AboutComponent,
         HomeComponent,
-        RevitConverterComponent
+        RevitConverterComponent,
+        AuthenticateComponent
     ],
     imports: [
         BrowserAnimationsModule,

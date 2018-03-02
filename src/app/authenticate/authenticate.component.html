@@ -1,0 +1,51 @@
+<p>
+  authenticate works!
+</p>
+<p>
+  Authenticate (Key and secret) Upload (file path) Convert Download
+</p>
+
+
+<form #authenticationForm="ngForm" (ngSubmit)="onSubmit()" [hidden]="submitted">
+  <section class="form-block">
+      <label>Please enter your Client ID and Client Secret, or follow this <a href="https://developer.autodesk.com/en/docs/oauth/v2/tutorials/create-app/">link</a> to set it up.</label>
+      <div class="form-group">
+          <label for="client_id">Client ID</label>
+          <label for="client_id"
+              aria-haspopup="true"
+              role="tooltip"
+              class="tooltip tooltip-validation tooltip-md"
+              [class.invalid]="clientIdInput.invalid && (clientIdInput.dirty || clientIdInput.touched)">
+              <input type="text" id="client_id" placeholder="Enter your client ID"
+                  required
+                  name="client_id"
+                  [(ngModel)]="client_id"
+                  #clientIdInput="ngModel">
+              <span class="tooltip-content">
+                  The Client ID is Required.
+              </span>
+          </label>
+      </div>
+      <div class="form-group">
+          <label for="client_secret">Client Secret</label>
+          <label for="client_secret"
+              aria-haspopup="true"
+              role="tooltip"
+              class="tooltip tooltip-validation tooltip-md"
+              [class.invalid]="clientSecretInput.invalid && (clientSecretInput.dirty || clientSecretInput.touched)">
+              <input type="text" id="client_secret" placeholder="Enter your Client Secret"
+                  required
+                  name="client_secret"
+                  [(ngModel)]="client_secret"
+                  #clientSecretInput="ngModel">
+              <span class="tooltip-content">
+                The Client Secret is Required.
+              </span>
+          </label>
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="authenticationForm.form.invalid">Connect</button>
+  </section>
+</form>
+
+<p>Client Id {{client_id}}</p>
+<p>Client Secret {{client_secret}}</p>

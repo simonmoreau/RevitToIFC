@@ -2,35 +2,7 @@
   revit-converter works!
 </p>
 <button type="button" class="btn btn-success btn-xs" (click)="DeleteBuckets()">Delete Buckets</button>
-<p>
-  Authenticate (Key and secret) Upload (file path) Convert Download
-</p>
-<form #authenticationForm="ngForm">
-  <section class="form-block">
-    <label>Identification</label>
-    <div class="form-group">
-      <label class="required">Client Id</label>
-      <label for="validInput1" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm" [class.invalid]="IdInput.invalid && (IdInput.dirty || IdInput.touched)">
-        <input type="text" id="validInput1" [(ngModel)]="client_id" required name="client_id" #IdInput="ngModel">
-        <span class="tooltip-content">
-          This field cannot be empty!
-        </span>
-      </label>
-    </div>
-    <div class="form-group">
-      <label class="required">Client Secret</label>
-      <label for="validInput2" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm" [class.invalid]="secretInput.invalid && (secretInput.dirty || secretInput.touched)">
-        <input type="text" id="validInput2" [(ngModel)]="client_secret" required name="client_secret" #secretInput="ngModel">
-        <span class="tooltip-content">
-          This field cannot be empty!
-        </span>
-      </label>
-    </div>
-  </section>
-</form>
 
-<p>Client Id {{client_id}}</p>
-<p>Client Secret {{client_secret}}</p>
 
 <div class="row">
   <div class="col-md-3">
