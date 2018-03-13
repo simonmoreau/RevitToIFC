@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
-import { JobAnswer, JobBody, Format, Type, JobStatus } from "./revit-converter.models";
+import { JobAnswer, JobBody, Format, Type, JobStatus, AccessToken } from "./revit-converter.models";
 
 @Injectable()
 export class RevitConverterService {
@@ -45,6 +45,15 @@ export class RevitConverterService {
           .set('Authorization', 'Bearer ' + access_token)
       })
       .do(data => console.log('All GetJobStatus: ' + JSON.stringify(data)))
+      .catch(this.handleError);
+  }
+
+  public GetAccessToken(): Observable<AccessToken> {
+    return this._http.get<AccessToken>(
+      'https://forgefunction.azurewebsites.net/api/ForgeToken',
+      {
+      })
+      .do(data => console.log('All GetAcessToken: ' + JSON.stringify(data)))
       .catch(this.handleError);
   }
 

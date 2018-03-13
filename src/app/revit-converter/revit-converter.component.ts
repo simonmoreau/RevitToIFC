@@ -17,52 +17,65 @@ export class RevitConverterComponent implements OnInit {
   public uploaderOptions: FileUploaderOptions;
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;
-  public access_token = "eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJlajhvbHFheEV0UHF1a2VhRlhYTXZBNjVqN2Zla1pBRyIsImV4cCI6MTUxOTYzODAzOSwic2NvcGUiOlsiZGF0YTp3cml0ZSIsInZpZXdhYmxlczpyZWFkIiwiZGF0YTpyZWFkIiwiYnVja2V0OnJlYWQiLCJidWNrZXQ6ZGVsZXRlIl0sImF1ZCI6Imh0dHBzOi8vYXV0b2Rlc2suY29tL2F1ZC9qd3RleHA2MCIsImp0aSI6Ikl2d2ZNN3RVRUp4WldHOFZUd1JHVnhvMUkzNndUOWluclhhbXJUc1RVc0ZySFBnMDVXODNPcWRRcTRoekJ1OUgifQ.iL_NqvlZWhzZapfW7hbH4tccT6D-YTYOTCRG17RyW6U";
+  public access_token = "";
 
   constructor(private _revitConverterService: RevitConverterService) { }
 
   ngOnInit() {
-    this.uploader.onBeforeUploadItem = (item) => {
-      item.method = "PUT";
-      item.url = baseUrl + 'revittoifcbucket2/objects/' + item.file.name;
 
-      let headers: Headers[] = [
-        { name: "Authorization", value: "Bearer " + this.access_token },
-        { name: "Content-Type", value: "application/octet-stream" }
-      ];
+    // Fetch an access token
 
-      item.headers = headers;
+    this._revitConverterService.GetAccessToken()
+    .subscribe(token => {
+      this.access_token = token.access_token;
+      console.log(this.access_token);
 
-      let itemStatus: FormDataStatus = {
-        intervalId: null,
-        status: "Uploading"
+      this.uploader.onBeforeUploadItem = (item) => {
+        item.method = "PUT";
+        item.url = baseUrl + 'revittoifcbucket2/objects/' + item.file.name;
+
+        let headers: Headers[] = [
+          { name: "Authorization", value: "Bearer " + this.access_token },
+          { name: "Content-Type", value: "application/octet-stream" }
+        ];
+
+        item.headers = headers;
+
+        let itemStatus: FormDataStatus = {
+          intervalId: null,
+          status: "Uploading"
+        };
+        item.formData = itemStatus;
+      }
+
+      this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+        console.log(response);
+        let uploadResponse: UploadAnswer = JSON.parse(response);
+
+        this._revitConverterService.PostJobRequest(this.access_token, uploadResponse.objectId)
+          .subscribe(answer => {
+            this._revitConverterService.GetJobStatus(this.access_token, answer.urn)
+              .subscribe(jobStatus1 => {
+                let itemStatus: FormDataStatus = {
+                  intervalId: null,
+                  status: "Converting"
+                };
+                item.formData = itemStatus;
+
+                if (jobStatus1.progress !== "complete") {
+                  let interval = setInterval(this.UpdateJobStatus, 2000, this.access_token, answer.urn, this._revitConverterService, item);
+                  item.formData.intervalId = interval;
+                }
+              },
+                error => this._revitConverterService.errorMessage = <any>error);
+          },
+            error => this._revitConverterService.errorMessage = <any>error);
       };
-      item.formData = itemStatus;
-    }
 
-    this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
-      console.log(response);
-      let uploadResponse: UploadAnswer = JSON.parse(response);
+    },
+      error => this._revitConverterService.errorMessage = <any>error);
 
-      this._revitConverterService.PostJobRequest(this.access_token, uploadResponse.objectId)
-        .subscribe(answer => {
-          this._revitConverterService.GetJobStatus(this.access_token, answer.urn)
-            .subscribe(jobStatus1 => {
-              let itemStatus: FormDataStatus = {
-                intervalId: null,
-                status: "Converting"
-              };
-              item.formData = itemStatus;
 
-              if (jobStatus1.progress !== "complete") {
-                let interval = setInterval(this.UpdateJobStatus, 2000, this.access_token, answer.urn, this._revitConverterService, item);
-                item.formData.intervalId = interval;
-              }
-            },
-              error => this._revitConverterService.errorMessage = <any>error);
-        },
-          error => this._revitConverterService.errorMessage = <any>error);
-    };
   }
 
   /**
