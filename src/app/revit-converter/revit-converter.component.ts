@@ -63,6 +63,15 @@ export class RevitConverterComponent implements OnInit {
                 item.formData = itemStatus;
             };
 
+            this.uploader.onAfterAddingFile = (
+                item: FileItem
+            ) => {
+                let extension: string = item.file.name.split('.').pop();
+                if (extension !== "rvt") {
+                    item.remove();
+                }
+            }
+
             this.uploader.onCompleteItem = (
                 item: FileItem,
                 response: string,
