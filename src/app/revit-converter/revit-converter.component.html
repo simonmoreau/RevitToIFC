@@ -5,12 +5,14 @@
 
     <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
       class="well my-drop-zone">
-      Base drop zone
-      <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
-      <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-        <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple
-        accept=".rvt"/>
-      </span>
+      <div class="row flex-items-xs-center">
+        <div>
+          <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
+          <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+            <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple accept=".rvt" />
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -46,13 +48,13 @@
           <td nowrap>{{item?.formData?.status}}</td>
           <td nowrap>
             <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-              <span class="glyphicon glyphicon-upload"></span> Upload
+              <clr-icon shape="upload"></clr-icon> Upload
             </button>
             <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-              <span class="glyphicon glyphicon-trash"></span> Remove
+              <clr-icon shape="trash"></clr-icon> Remove
             </button>
             <button *ngIf="item?.formData?.status=='Complete'" type="button" class="btn btn-success btn-xs" (click)="DownloadFile(item?.formData?.urn,item?.formData?.derivativeUrn)">
-              <span class="glyphicon glyphicon-trash"></span> Download
+              <clr-icon shape="download"></clr-icon> Download
             </button>
           </td>
         </tr>
@@ -67,10 +69,10 @@
         </div>
       </div>
       <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-        <span class="glyphicon glyphicon-upload"></span> Upload all
+        <clr-icon shape="upload"></clr-icon> Upload all
       </button>
       <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-        <span class="glyphicon glyphicon-trash"></span> Remove all
+        <clr-icon shape="trash"></clr-icon> Remove all
       </button>
     </div>
 
