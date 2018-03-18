@@ -51,6 +51,8 @@ export interface JobAnswer {
 export interface FormDataStatus {
     intervalId: number;
     status: string;
+    urn: string;
+    derivativeUrn: string;
 }
 
 export interface UploadAnswer {

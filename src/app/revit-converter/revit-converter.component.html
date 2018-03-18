@@ -1,9 +1,3 @@
-<p>
-  revit-converter works!
-</p>
-<button type="button" class="btn btn-success btn-xs" (click)="DeleteBuckets()">Delete Buckets</button>
-
-
 <div class="row">
   <div class="col-md-3">
 
@@ -56,6 +50,9 @@
             </button>
             <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
               <span class="glyphicon glyphicon-trash"></span> Remove
+            </button>
+            <button *ngIf="item?.formData?.status=='Complete'" type="button" class="btn btn-success btn-xs" (click)="DownloadFile(item?.formData?.urn,item?.formData?.derivativeUrn)">
+              <span class="glyphicon glyphicon-trash"></span> Download
             </button>
           </td>
         </tr>
