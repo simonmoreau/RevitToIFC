@@ -42,7 +42,7 @@ export class RevitConverterComponent implements OnInit {
             this.uploader.onBeforeUploadItem = item => {
                 item.method = "PUT";
                 item.url =
-                    baseUrl + "revittoifcbucket2/objects/" + item.file.name;
+                    baseUrl + "revittoifcbucket2/objects/" + Date.now().toString() + '_' + item.file.name;
 
                 let headers: Headers[] = [
                     {
@@ -155,6 +155,7 @@ export class RevitConverterComponent implements OnInit {
      */
     public DownloadFile(urn: string, derivative: string) {
         let fileName: string = derivative.replace(/^.*[\\\/]/, '')
+        fileName = fileName.replace( new RegExp("\\d*_"), "");
         this._revitConverterService
             .GetDerivative(this.access_token, urn, derivative)
             .subscribe(data => this._revitConverterService.downloadFile(data, fileName));
