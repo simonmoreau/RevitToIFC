@@ -7,7 +7,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { ClarityModule } from '@clr/angular';
 import { AppComponent } from './app.component';
 import { ROUTING } from "./app.routing";
-import { HomeComponent } from "./home/home.component";
 import { AboutComponent } from "./about/about.component";
 import { RevitConverterComponent } from './revit-converter/revit-converter.component';
 import { FileUploadModule } from "ng2-file-upload";
@@ -17,7 +16,6 @@ import { AuthenticateComponent } from './authenticate/authenticate.component';
     declarations: [
         AppComponent,
         AboutComponent,
-        HomeComponent,
         RevitConverterComponent,
         AuthenticateComponent
     ],

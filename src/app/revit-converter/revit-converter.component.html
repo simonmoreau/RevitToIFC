@@ -1,16 +1,18 @@
 <div class="row">
   <div class="col-md-12">
-
-    <h3>Select files</h3>
-
     <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
       class="well my-drop-zone">
       <div class="row flex-items-xs-center">
-        <div>
-          <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
-          <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-            <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple accept=".rvt" />
-          </span>
+        <div style="margin: 30px">
+          <div class="row flex-items-xs-center">
+              <span class="clr-icon clr-cloud-logo"></span>
+          </div>
+          <div class="row flex-items-xs-center">
+              <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
+              <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+                <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple accept=".rvt" />
+              </span>
+          </div>
         </div>
       </div>
     </div>

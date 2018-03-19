@@ -2,7 +2,6 @@
 
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { HomeComponent } from "./home/home.component";
 import { AboutComponent } from "./about/about.component";
 import { ClarityModule } from "@clr/angular";
 import { ROUTING } from "./app.routing";
@@ -17,8 +16,7 @@ describe('AppComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 AppComponent,
-                AboutComponent,
-                HomeComponent
+                AboutComponent
             ],
             imports: [
                 ClarityModule.forRoot(),

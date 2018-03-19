@@ -1,7 +1,16 @@
-.my-drop-zone { border: dotted 3px lightgray; }
+.my-drop-zone { border: dotted 3px #007cbb; }
 .nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
 .another-file-over-class { border: dotted 3px green; }
 
 html, body { height: 100%; }
 
 .table td { vertical-align: inherit;}
+
+.clr-icon {
+    &.clr-cloud-logo {
+        background-image: url(../../images/cloud.svg);
+        height: 124px;
+        width: 200px;
+        margin: 40px;
+    }
+  }
