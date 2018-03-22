@@ -2,7 +2,6 @@
 
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { AboutComponent } from "./about/about.component";
 import { ClarityModule } from "@clr/angular";
 import { ROUTING } from "./app.routing";
 import { APP_BASE_HREF } from "@angular/common";
@@ -15,8 +14,7 @@ describe('AppComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                AppComponent,
-                AboutComponent
+                AppComponent
             ],
             imports: [
                 ClarityModule.forRoot(),
