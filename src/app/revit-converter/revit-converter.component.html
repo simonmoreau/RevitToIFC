@@ -2,9 +2,8 @@
   <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
     class="well my-drop-zone col-md-12">
     <div class="row flex-items-xs-center">
-      <h1>Convert your Revit files to IFC</h1>
-      <img src="" />
     </div>
+
     <div class="row flex-items-xs-center">
       <div>
         <div class="row flex-items-xs-center">
@@ -38,12 +37,12 @@
               <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
               <!-- <td *ngIf="uploader.isHTML5"> data-displayval="{{item.progress + '%'}}"-->
               <td nowrap>
-                  <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'" class="spinner spinner-inline"></span>
-                  <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'">
-                      {{item?.formData?.status}}
-                  </span>
-                  <clr-icon *ngIf="item?.formData.status == 'Complete'" shape="success-standard"></clr-icon>
-                </td>
+                <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'" class="spinner spinner-inline"></span>
+                <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'">
+                  {{item?.formData?.status}}
+                </span>
+                <clr-icon *ngIf="item?.formData.status == 'Complete'" shape="success-standard"></clr-icon>
+              </td>
               <td nowrap>
                 <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
                   <clr-icon shape="upload"></clr-icon> Upload
@@ -71,5 +70,24 @@
       </div>
 
     </div>
-  </div>
+    <div class="row flex-items-xs-center">
+      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="card-header">
+              Convert your Revit files to IFC
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              This free service rely on a paying subscription to the Autodesk Forge service to convert your Revit file to IFC.<br>
+              If you find this service usefull, you can buy me a coffe.
+            </div>
+            <div class="card-img card-footer">
+                <a href='https://ko-fi.com/U7U7B14V' target='_blank'>
+                  <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com'/>
+                </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
