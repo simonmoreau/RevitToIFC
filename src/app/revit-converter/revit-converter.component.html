@@ -1,80 +1,75 @@
 <div class="row">
-    <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
-      class="well my-drop-zone col-md-12">
-      <div class="row flex-items-xs-center">
-        <div>
-          <div class="row flex-items-xs-center">
-              <span class="clr-icon clr-cloud-logo"></span>
-          </div>
-          <div class="row flex-items-xs-center">
-              <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
-              <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-                <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple accept=".rvt" />
-              </span>
-          </div>
+  <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
+    class="well my-drop-zone col-md-12">
+    <div class="row flex-items-xs-center">
+      <h1>Convert your Revit files to IFC</h1>
+      <img src="" />
+    </div>
+    <div class="row flex-items-xs-center">
+      <div>
+        <div class="row flex-items-xs-center">
+          <span class="clr-icon clr-cloud-logo"></span>
+        </div>
+        <div class="row flex-items-xs-center">
+          <button (click)="fileInput.click()" class="btn btn-default">Upload Revit Files</button>
+          <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+            <input type="file" #fileInput ng2FileSelect [uploader]="uploader" multiple accept=".rvt" />
+          </span>
         </div>
       </div>
-      <div class="row">
-          <div class="col-md-12" style="margin-bottom: 40px" *ngIf="uploader.queue.length != 0">
-            <h3>Upload queue</h3>
-            <p>Queue length: {{ uploader?.queue?.length }}</p>
-        
-            <table class="table">
-              <thead>
-                <tr>
-                  <th width="50%">Name</th>
-                  <th>Size</th>
-                  <th>Progress</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of uploader.queue">
-                  <td>
-                    <strong>{{ item?.file?.name }}</strong>
-                  </td>
-                  <!-- <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td> -->
-                  <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
-                  <!-- <td *ngIf="uploader.isHTML5"> data-displayval="{{item.progress + '%'}}"-->
-                  <td>
-                    <div class="progress">
-                      <progress max="100" value="{{item.progress}}"></progress>
-                    </div>
-                  </td>
-                  <td nowrap>{{item?.formData?.status}}</td>
-                  <td nowrap>
-                    <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                      <clr-icon shape="upload"></clr-icon> Upload
-                    </button>
-                    <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-                      <clr-icon shape="trash"></clr-icon> Remove
-                    </button>
-                    <button *ngIf="item?.formData?.status=='Complete'" type="button" class="btn btn-success btn-xs" (click)="DownloadFile(item?.formData?.urn,item?.formData?.derivativeUrn)">
-                      <clr-icon shape="download"></clr-icon> Download
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-        
-            <div>
-              <div>
-                Queue progress:
-                <div class="progress">
-                  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                <clr-icon shape="upload"></clr-icon> Upload all
-              </button>
-              <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-                <clr-icon shape="trash"></clr-icon> Remove all
-              </button>
-            </div>
-        
-          </div>
-        
+    </div>
+    <div class="row">
+      <div class="col-md-12" style="margin-bottom: 40px" *ngIf="uploader.queue.length != 0">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Size</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of uploader.queue">
+              <td>
+                <strong>{{ item?.file?.name }}</strong>
+              </td>
+              <!-- <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td> -->
+              <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+              <!-- <td *ngIf="uploader.isHTML5"> data-displayval="{{item.progress + '%'}}"-->
+              <td nowrap>
+                  <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'" class="spinner spinner-inline"></span>
+                  <span *ngIf="item?.formData?.status && item?.formData.status != 'Complete'">
+                      {{item?.formData?.status}}
+                  </span>
+                  <clr-icon *ngIf="item?.formData.status == 'Complete'" shape="success-standard"></clr-icon>
+                </td>
+              <td nowrap>
+                <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                  <clr-icon shape="upload"></clr-icon> Upload
+                </button>
+                <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                  <clr-icon shape="trash"></clr-icon> Remove
+                </button>
+                <button *ngIf="item?.formData?.status=='Complete'" type="button" class="btn btn-success btn-xs" (click)="DownloadFile(item?.formData?.urn,item?.formData?.derivativeUrn)">
+                  <clr-icon shape="download"></clr-icon> Download
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div>
+          <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+            <clr-icon shape="upload"></clr-icon> Upload all
+          </button>
+          <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+            <clr-icon shape="trash"></clr-icon> Remove all
+          </button>
         </div>
+
+      </div>
+
     </div>
   </div>
+</div>

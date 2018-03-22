@@ -135,7 +135,8 @@ export class RevitConverterComponent implements OnInit {
 
             if (jobCurrentStatus.progress !== "complete") {
                 // While the job is running
-                itemStatus.status = jobCurrentStatus.progress;
+                let conversionProgress: string = jobCurrentStatus.progress.match( new RegExp("\\d*%"))[0];
+                itemStatus.status = "Converting " + conversionProgress; // ;
             } else {
                 // When the conversion is complete
                 itemStatus.status = "Complete";

@@ -1,5 +1,5 @@
 /* .my-drop-zone { border: dotted 3px #007cbb; } */
-.nv-file-over { border: solid 5px #007cbb; } /* Default class applied to drop zones on over */
+.nv-file-over { border: solid 5px #007cbb; min-height: 500px } /* Default class applied to drop zones on over */
 .another-file-over-class { border: dotted 3px green; }
 
 html, body { height: 100%; }
