@@ -9,6 +9,8 @@
 
 Revit To IFC is a web application using the Autodesk Forge web services to convert Revit file to the IFC format. You can use this application to upload your Revit file to the Forge service and download back the converted file.
 
+![Overview](https://raw.githubusercontent.com/simonmoreau/RevitToIFC/master/doc/revitToIfc.gif)
+
 # Installation
 
 *Prerequisite*:
