@@ -42,7 +42,7 @@ export class RevitConverterComponent implements OnInit {
             this.uploader.onBeforeUploadItem = item => {
                 item.method = "PUT";
                 item.url =
-                    baseUrl + "revittoifcbucket2/objects/" + Date.now().toString() + '_' + item.file.name;
+                    baseUrl + "revittoifcbucket/objects/" + Date.now().toString() + '_' + item.file.name;
 
                 let headers: Headers[] = [
                     {

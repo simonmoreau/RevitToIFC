@@ -9,13 +9,11 @@ import { AppComponent } from './app.component';
 import { ROUTING } from "./app.routing";
 import { RevitConverterComponent } from './revit-converter/revit-converter.component';
 import { FileUploadModule } from "ng2-file-upload";
-import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         RevitConverterComponent,
-        AuthenticateComponent
     ],
     imports: [
         BrowserAnimationsModule,
