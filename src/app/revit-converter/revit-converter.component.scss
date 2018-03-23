@@ -14,3 +14,9 @@ html, body { height: 100%; }
         margin: 40px;
     }
   }
+.card-footer {
+    &.coffee {
+        text-align: center;
+    }
+}
+  
