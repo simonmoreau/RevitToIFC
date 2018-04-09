@@ -107,13 +107,18 @@ export class RevitConverterComponent implements OnInit {
                                     item.formData.intervalId = interval;
                                 } else {
                                     // When the conversion is complete
-                                    itemStatus.status = "Complete";
-                                    // Add the download link
-                                    let derivativeUrn: string = jobStatus1.derivatives.filter(
-                                        derivative =>
-                                            derivative.outputType === "ifc"
-                                    )[0].children[0].urn;
-                                    itemStatus.derivativeUrn = derivativeUrn;
+                                    if (jobStatus1.status === "failed") {
+                                        itemStatus.status = "Failed";
+                                    } else {
+                                        itemStatus.status = "Complete";
+                                        // Add the download link
+                                        let derivativeUrn: string = jobStatus1.derivatives.filter(
+                                            derivative =>
+                                                derivative.outputType === "ifc"
+                                        )[0].children[0].urn;
+                                        itemStatus.derivativeUrn = derivativeUrn;
+                                    }
+
                                 }
                             }, error => (this._revitConverterService.errorMessage = <any>error));
                     }, error => (this._revitConverterService.errorMessage = <any>error));
