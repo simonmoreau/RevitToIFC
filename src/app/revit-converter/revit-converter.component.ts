@@ -42,7 +42,11 @@ export class RevitConverterComponent implements OnInit {
             this.uploader.onBeforeUploadItem = item => {
                 item.method = "PUT";
                 item.url =
-                    baseUrl + "revittoifcbucket/objects/" + Date.now().toString() + '_' + item.file.name;
+                    baseUrl +
+                    "revittoifcbucket/objects/" +
+                    Date.now().toString() +
+                    "_" +
+                    item.file.name;
 
                 let headers: Headers[] = [
                     {
@@ -63,14 +67,12 @@ export class RevitConverterComponent implements OnInit {
                 item.formData = itemStatus;
             };
 
-            this.uploader.onAfterAddingFile = (
-                item: FileItem
-            ) => {
-                let extension: string = item.file.name.split('.').pop();
+            this.uploader.onAfterAddingFile = (item: FileItem) => {
+                let extension: string = item.file.name.split(".").pop();
                 if (extension !== "rvt") {
                     item.remove();
                 }
-            }
+            };
 
             this.uploader.onCompleteItem = (
                 item: FileItem,
@@ -109,6 +111,10 @@ export class RevitConverterComponent implements OnInit {
                                     // When the conversion is complete
                                     if (jobStatus1.status === "failed") {
                                         itemStatus.status = "Failed";
+                                    } else if (
+                                        jobStatus1.derivatives.length === 0
+                                    ) {
+                                        itemStatus.status = "Failed";
                                     } else {
                                         itemStatus.status = "Complete";
                                         // Add the download link
@@ -118,7 +124,6 @@ export class RevitConverterComponent implements OnInit {
                                         )[0].children[0].urn;
                                         itemStatus.derivativeUrn = derivativeUrn;
                                     }
-
                                 }
                             }, error => (this._revitConverterService.errorMessage = <any>error));
                     }, error => (this._revitConverterService.errorMessage = <any>error));
@@ -140,18 +145,24 @@ export class RevitConverterComponent implements OnInit {
 
             if (jobCurrentStatus.progress !== "complete") {
                 // While the job is running
-                let conversionProgress: string = jobCurrentStatus.progress.match( new RegExp("\\d*%"))[0];
+                let conversionProgress: string = jobCurrentStatus.progress.match(
+                    new RegExp("\\d*%")
+                )[0];
                 itemStatus.status = "Converting " + conversionProgress; // ;
             } else {
                 // When the conversion is complete
-                itemStatus.status = "Complete";
-                // Add the download link
-                let derivativeUrn: string = jobCurrentStatus.derivatives.filter(
-                    derivative => derivative.outputType === "ifc"
-                )[0].children[0].urn;
-                itemStatus.derivativeUrn = derivativeUrn;
-
-                clearInterval(itemStatus.intervalId);
+                if (jobCurrentStatus.status === "failed") {
+                    itemStatus.status = "Failed";
+                } else if (jobCurrentStatus.derivatives.length === 0) {
+                    itemStatus.status = "Failed";
+                } else {
+                    itemStatus.status = "Complete";
+                    // Add the download link
+                    let derivativeUrn: string = jobCurrentStatus.derivatives.filter(
+                        derivative => derivative.outputType === "ifc"
+                    )[0].children[0].urn;
+                    itemStatus.derivativeUrn = derivativeUrn;
+                }
             }
         }, error => (this._revitConverterService.errorMessage = <any>error));
     }
@@ -160,11 +171,13 @@ export class RevitConverterComponent implements OnInit {
      * Download file
      */
     public DownloadFile(urn: string, derivative: string) {
-        let fileName: string = derivative.replace(/^.*[\\\/]/, '')
-        fileName = fileName.replace( new RegExp("\\d*_"), "");
+        let fileName: string = derivative.replace(/^.*[\\\/]/, "");
+        fileName = fileName.replace(new RegExp("\\d*_"), "");
         this._revitConverterService
             .GetDerivative(this.access_token, urn, derivative)
-            .subscribe(data => this._revitConverterService.downloadFile(data, fileName));
+            .subscribe(data =>
+                this._revitConverterService.downloadFile(data, fileName)
+            );
     }
     /**
      * DeleteBuckets
