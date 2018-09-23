@@ -106,7 +106,7 @@ export class RevitConverterService {
                 {}
             )
             .do(data =>
-                console.log("All GetAcessToken: " + JSON.stringify(data))
+                console.log("You have a token!")
             )
             .catch(this.handleError);
     }
