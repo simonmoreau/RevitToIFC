@@ -37,8 +37,6 @@ export class RevitConverterComponent implements OnInit {
 
         this._revitConverterService.GetAccessToken().subscribe(token => {
             this.access_token = token.access_token;
-            console.log(this.access_token);
-
             this.uploader.onBeforeUploadItem = item => {
                 item.method = "PUT";
                 item.url =
@@ -97,7 +95,7 @@ export class RevitConverterComponent implements OnInit {
                                 };
                                 item.formData = itemStatus;
 
-                                if (jobStatus1.progress !== "complete") {
+                                if (jobStatus1.derivatives.length === 0) {
                                     let interval = setInterval(
                                         this.UpdateJobStatus,
                                         2000,
@@ -110,10 +108,6 @@ export class RevitConverterComponent implements OnInit {
                                 } else {
                                     // When the conversion is complete
                                     if (jobStatus1.status === "failed") {
-                                        itemStatus.status = "Failed";
-                                    } else if (
-                                        jobStatus1.derivatives.length === 0
-                                    ) {
                                         itemStatus.status = "Failed";
                                     } else {
                                         itemStatus.status = "Complete";
@@ -143,7 +137,7 @@ export class RevitConverterComponent implements OnInit {
         service.GetJobStatus(access_token, urn).subscribe(jobCurrentStatus => {
             let itemStatus: FormDataStatus = item.formData;
 
-            if (jobCurrentStatus.progress !== "complete") {
+            if (jobCurrentStatus.derivatives.length === 0) {
                 // While the job is running
                 let conversionProgress: string = jobCurrentStatus.progress.match(
                     new RegExp("\\d*%")
@@ -152,8 +146,6 @@ export class RevitConverterComponent implements OnInit {
             } else {
                 // When the conversion is complete
                 if (jobCurrentStatus.status === "failed") {
-                    itemStatus.status = "Failed";
-                } else if (jobCurrentStatus.derivatives.length === 0) {
                     itemStatus.status = "Failed";
                 } else {
                     itemStatus.status = "Complete";
