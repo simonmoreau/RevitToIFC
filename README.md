@@ -1,3 +1,8 @@
+**This project is now archived, you can find the new version in [RevitToIFCApp](https://github.com/simonmoreau/RevitToIFCApp)**
+
+----
+
+
 <p align="center"><img width=12.5% src="https://raw.githubusercontent.com/simonmoreau/RevitToIFC/master/src/images/revitToIFC_logo.png"></p>
 <h1 align="center">
   RevitToIFC
